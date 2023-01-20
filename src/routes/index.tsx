@@ -4,10 +4,6 @@ import type { DocumentHead } from '@builder.io/qwik-city';
 export default component$(() => {
   const api_url = 'https://api.github.com/users/'
   const repos = useSignal([])
-  // const state = useStore({
-  //   api_url: 'https://api.github.com/users/',
-  //   repos: []
-  // })
   return (
     <>
       <div class="absolute w-screen h-screen overflow-hidden">
@@ -25,7 +21,6 @@ export default component$(() => {
             return response.json()
           })
           .then((result: []) => {
-            console.log(result)
             repos.value = result.filter(repo => (repo as {fork: boolean}).fork === false)
           })
           .catch(error => alert(error))
@@ -34,14 +29,20 @@ export default component$(() => {
                   name='username'
                   class="bg-blue-100 outline-none w-3/4 md:w-1/2 bg-opacity-50
                           mr-4 mt-4 p-1 md:p-2 border-2 border-blue-600 rounded backdrop-blur"/>
-          <button class="bg-emerald-100 hover:bg-emerald-700 text-emerald-900 hover:text-white bg-opacity-50 mt-4 p-1 md:p-2
-                  border-2 border-emerald-600 rounded" type='submit'>Search</button>
+
+          <button class="bg-emerald-100 hover:bg-emerald-700 text-emerald-900 hover:text-white bg-opacity-50 mt-4
+                          p-1 md:p-2 border-2 border-emerald-600 rounded" type='submit'>
+                            Search
+          </button>
         </form>
         <div class="flex flex-wrap flex-row justify-around box-border">
-        {repos.value?.map((repo: {owner: {avatar_url: string}, name: string, html_url: string}, index: number) => {
+        {repos.value?.map(
+          (repo: {owner: {avatar_url: string}, name: string, html_url: string},
+            index: number) => {
           return <a href={repo.html_url} 
                     target="_blank"
-                    class="basis-full md:basis-1/4 m-4 bg-blue-200 hover:bg-blue-400 hover:bg-opacity-20 bg-opacity-20 backdrop-blur-sm rounded"
+                    class="basis-full md:basis-1/4 m-4 bg-blue-200 hover:bg-blue-400 hover:bg-opacity-20 bg-opacity-20
+                            backdrop-blur-sm rounded"
                     key={index}>
               <div class="flex flex-row items-center justify-around my-4 ">
                 <img class="basis-1/4 opacity-100 rounded" width={50} height={50} src={repo.owner.avatar_url} alt="owner avatar" />
