@@ -41,7 +41,7 @@ export default component$(() => {
             index: number) => {
           return <a href={repo.html_url} 
                     target="_blank"
-                    class="basis-full md:basis-1/4 m-4 bg-blue-200 hover:bg-blue-400 hover:bg-opacity-20 bg-opacity-20
+                    class="basis-full w-4/5 md:basis-1/4 md:w-1/4 m-4 bg-blue-200 hover:bg-blue-400 hover:bg-opacity-20 bg-opacity-20
                             backdrop-blur-sm rounded flex flex-row items-center justify-around py-4"
                     key={index}>
                 <img class="basis-1/4 opacity-100 rounded" width={50} height={50} src={repo.owner.avatar_url} alt="owner avatar" />
