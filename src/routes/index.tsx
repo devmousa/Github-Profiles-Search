@@ -44,7 +44,7 @@ export default component$(() => {
                     class="basis-full md:basis-1/4 m-4 bg-blue-200 hover:bg-blue-400 hover:bg-opacity-20 bg-opacity-20
                             backdrop-blur-sm rounded"
                     key={index}>
-              <div class="flex flex-row items-center justify-around my-4 h-fit">
+              <div class="flex flex-row items-center justify-around my-4">
                 <img class="basis-1/4 opacity-100 rounded" width={50} height={50} src={repo.owner.avatar_url} alt="owner avatar" />
                 <p class="basis-2/4 w-2/4 overflow-hidden">{repo.name}</p>
               </div>
