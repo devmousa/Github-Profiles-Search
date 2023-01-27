@@ -3,7 +3,9 @@ import { profileContext } from "~/context/context"
 import type { Repo, User } from "~/types/types"
 import Swal from "sweetalert2"
 
-export const defaultUser: User = {
+import star from "~/svg/star-outline.svg"
+
+export let defaultUser: User = {
   avatar_url: "",
   bio: "",
   followers: 0,
@@ -14,39 +16,49 @@ export const defaultUser: User = {
   public_repos: 0
 }
 
+export let defaultRepos: Array<Repo> = []
+
 export const api_url = 'https://api.github.com/users/'
 
-export const handle = (error: string) => {
-  Swal.fire({
-    icon: 'error',
-    title: 'Oops...',
-    text: error,
-  })
+export const handle = async (response: Response) => {
+  if (!response.ok) {
+    if(response.status === 404)
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: "User does not exist",
+      })
+    else
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: `HTTP error: ${response.status}`,
+      })
+  } else {
+    const user = await response.json()
+    defaultUser = {...user}
+    return user
+  }
+  return defaultUser
 }
 
 export const getUserData = async (username: string) => {
   let user: User = defaultUser
   const gh_user_url = api_url + username
   const response = await fetch(gh_user_url)
-  if (!response.ok) {
-      if(response.status === 404)
-        handle("User does not exist")
-      else
-        handle(`HTTP error: ${response.status}`)
-  } else {
-    user = await response.json()
-  }
+  user = await handle(response)
 
   return user
 }
 
 export const getUserRepos = async (username: string) => {
-  let repos: Array<Repo> = []
+  let repos: Array<Repo> = defaultRepos
   const repo_url = api_url + username + '/repos?sort=created'
   const response = await fetch(repo_url)
   if (response.ok) {
     const result: Array<Repo> = await response.json()
     repos = result.filter((repo: Repo) => repo.fork === false)
+    defaultRepos = [...repos]
   }
 
   return repos
@@ -57,6 +69,7 @@ export const getData = async (username: string): Promise<{
 }> => {
   const user: User = await getUserData(username)
   const repos: Array<Repo> = await getUserRepos(username)
+  console.table([user, repos])
 
   return {
     repos,
@@ -75,10 +88,10 @@ export const ProfileComponent = component$(() => {
             <div class="basis-full md:basis-5/6 flex flex-col text-center">
               <h2 class="font-bold text-lg">{state.user.name}</h2>
               <h3 class="font-semibold text-lg">{state.user.login} - Followers: <em>{state.user.followers}</em></h3>
-              <p>{state.user.bio}</p>
-              <p class="text-sm">Location: {state.user.location}</p>
+              <p class="md:mx-4">{state.user.bio}</p>
+              <p class="text-sm">{state.user.location ? `Location: ${state.user.location}` : ''}</p>
               <p>Public repositories: <b>{state.user.public_repos}</b></p>
-              <a class="w-fit mx-auto text-xs py-1 px-2 my-1 rounded opacity-60 hover:opacity-100 bg-emerald-300 hover:bg-emerald-100"
+              <a class="w-fit mx-auto text-xs py-1 px-2 my-1 rounded bg-opacity-30 hover:bg-opacity-90 bg-cyan-200 hover:bg-cyan-100"
                   target="_blank" href={state.user.html_url}>Jump to the profile</a>
             </div>
           </div>)
@@ -95,6 +108,10 @@ export const ProfileComponent = component$(() => {
                           backdrop-blur-sm rounded flex flex-row items-center justify-around py-4"
                   key={index}>
               <p class="basis-2/4 text-center overflow-hidden">{repo.name}</p>
+              <div class="flex items-center">
+                <b>{repo.stargazers_count}</b>
+                <img class="ml-1" width={20} height={20} src={star} alt="stars" />
+              </div>
         </a>
       })}
       </div>

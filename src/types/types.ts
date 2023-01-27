@@ -12,5 +12,6 @@ export type User = {
 export type Repo = {
   name: string,
   html_url: string,
-  fork: boolean
+  fork: boolean,
+  stargazers_count: number
 }

@@ -1,6 +1,6 @@
 import { component$, useContextProvider, useStore } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
-import { defaultUser } from '~/components/profile/profile';
+import { defaultRepos, defaultUser } from '~/components/profile/profile';
 import type { Profile } from '~/context/context';
 import { profileContext } from '~/context/context';
 import { getData } from '~/components/profile/profile';
@@ -9,7 +9,7 @@ import { ProfileComponent } from '~/components/profile/profile';
 export default component$(() => {
   const state = useStore<Profile>({
     user: defaultUser,
-    repos: [],
+    repos: defaultRepos,
   })
   useContextProvider(profileContext, state)
   return (
