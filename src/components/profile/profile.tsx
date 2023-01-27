@@ -69,7 +69,6 @@ export const getData = async (username: string): Promise<{
 }> => {
   const user: User = await getUserData(username)
   const repos: Array<Repo> = await getUserRepos(username)
-  console.table([user, repos])
 
   return {
     repos,
@@ -84,7 +83,7 @@ export const ProfileComponent = component$(() => {
       {state.user.login !== "" ?
           (<div class="md:w-5/6 bg-blue-300 mx-8 md:mx-auto my-2 p-4 rounded
                         flex flex-col md:flex-row justify-center items-center bg-opacity-20 backdrop-blur">
-            <img class="basis-full mb-4 md:mb-0 md:basis-1/6 w-1/2 md:w-1/6 rounded" src={state.user.avatar_url} alt={`${state.user.name}'s github image`} />
+            <img class="basis-full mb-4 md:mb-0 md:basis-1/6 w-1/2 md:w-1/6 rounded bg-transparent" src={state.user.avatar_url} alt={`${state.user.name}'s github image`} />
             <div class="basis-full md:basis-5/6 flex flex-col text-center">
               <h2 class="font-bold text-lg">{state.user.name}</h2>
               <h3 class="font-semibold text-lg">{state.user.login} - Followers: <em>{state.user.followers}</em></h3>
