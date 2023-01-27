@@ -15,7 +15,4 @@ if you like the website, don't forget to give this repo a _star_ 🌟
 
 a **screenshot** from the website:
 
-<div style="display: flex; flex-direction: row; flex-wrap: nowrap;">
-  <img width="805" alt="Screenshot 2023-01-26 234100" src="https://user-images.githubusercontent.com/93449860/214957480-c4653cd1-0616-45eb-8fdd-b4d84b70740b.png">
-  <img width="176" alt="Screenshot 2023-01-26 234241" src="https://user-images.githubusercontent.com/93449860/214957491-eb9cf0f5-4655-470f-86d6-b0c3f971bf0f.png">
-</div>
+<img width="946" alt="Screenshot 2023-01-26 234100" src="https://user-images.githubusercontent.com/93449860/214957480-c4653cd1-0616-45eb-8fdd-b4d84b70740b.png">
