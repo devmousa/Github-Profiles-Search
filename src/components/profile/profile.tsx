@@ -18,7 +18,7 @@ export let defaultUser: User = {
 
 export let defaultRepos: Array<Repo> = []
 
-export const api_url = 'https://api.github.com/users/'
+export const api_url: string = 'https://api.github.com/users/'
 
 export const handle = async (response: Response) => {
   if (!response.ok) {
@@ -53,11 +53,13 @@ export const getUserData = async (username: string) => {
 
 export const getUserRepos = async (username: string) => {
   let repos: Array<Repo> = defaultRepos
-  const repo_url = api_url + username + '/repos?sort=created'
+  const repo_url = api_url + username + "/repos?sort=updated"
   const response = await fetch(repo_url)
   if (response.ok) {
     const result: Array<Repo> = await response.json()
+    console.log(result)
     repos = result.filter((repo: Repo) => repo.fork === false)
+    console.log(repos)
     defaultRepos = [...repos]
   }
 
