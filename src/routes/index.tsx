@@ -21,11 +21,11 @@ export default component$(() => {
       <div class="flex flex-col z-10 relative h-screen overflow-y-auto scroll-smooth">
         <form class="flex flex-row items-center justify-center"
               preventdefault:submit
-              onSubmit$={(e) => getData((e.target as HTMLFormElement).username.value)
-                                  .then(data => {
-                                    state.repos = data.repos
-                                    state.user = data.user
-                                  })}>
+              onSubmit$={async (e) => {
+                const data = await getData((e.target as HTMLFormElement).username.value)
+                state.repos = data.repos
+                state.user = data.user
+              }}>
 
           <input  type="text"
                   name='username'
