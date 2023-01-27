@@ -1,4 +1,3 @@
-import { createDOM } from '@builder.io/qwik/testing';
 import { test, expect } from 'vitest';
 import { getData, getUserData, getUserRepos } from './profile';
 
