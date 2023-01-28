@@ -5,72 +5,63 @@ import Swal from "sweetalert2"
 
 import star from "~/svg/star-outline.svg"
 
-export let defaultUser: User = {
-  avatar_url: "",
-  bio: "",
-  followers: 0,
-  html_url: "",
-  location: "",
-  login: "",
-  name: "",
-  public_repos: 0
-}
-
-export let defaultRepos: Array<Repo> = []
-
 export const api_url: string = 'https://api.github.com/users/'
 
-export const handle = async (response: Response) => {
+export const handleResponse = async (response: Response) => {
   if (!response.ok) {
-    if(response.status === 404)
+    if(response.status === 404){
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: "User does not exist",
       })
-    else
+    } else {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: `HTTP error: ${response.status}`,
       })
+    }
   } else {
-    const user = await response.json()
-    defaultUser = {...user}
-    return user
+    const data = await response.json()
+    return data
   }
-  return defaultUser
 }
 
-export const getUserData = async (username: string) => {
-  let user: User = defaultUser
+export const getUser = async (username: string) => {
   const gh_user_url = api_url + username
   const response = await fetch(gh_user_url)
-  user = await handle(response)
+  const user: User = await handleResponse(response)
 
   return user
 }
 
-export const getUserRepos = async (username: string) => {
-  let repos: Array<Repo> = defaultRepos
-  const repo_url = api_url + username + "/repos?sort=updated"
+export const getRepos = async (username: string, page: number = 1) => {
+  const repo_url = api_url + username + `/repos?sort=updated&page=${page}`
   const response = await fetch(repo_url)
-  if (response.ok) {
-    const result: Array<Repo> = await response.json()
-    console.log(result)
-    repos = result.filter((repo: Repo) => repo.fork === false)
-    console.log(repos)
-    defaultRepos = [...repos]
-  }
+  const result: Repo[] = await handleResponse(response)
+  const repos: Repo[] = result.filter((repo: Repo) => repo.fork === false)
 
   return repos
 }
 
-export const getData = async (username: string): Promise<{
-  repos: Array<Repo>, user: User
+export const infiniteScrollToGetRepos = async (username: string, page: number) => {
+  const scrollY = window.scrollY
+  const innerHeight = window.innerHeight
+  const offsetHeight = document.body.offsetHeight
+
+  if (scrollY + innerHeight > offsetHeight - 100) {
+    page++
+    const repos: Repo[] = await getRepos(username, page)
+    return repos
+  }
+}
+
+export const getUserData = async (username: string): Promise<{
+  repos: Repo[], user: User
 }> => {
-  const user: User = await getUserData(username)
-  const repos: Array<Repo> = await getUserRepos(username)
+  const user: User = await getUser(username)
+  const repos: Repo[] = await getRepos(username)
 
   return {
     repos,
@@ -82,7 +73,7 @@ export const ProfileComponent = component$(() => {
   const state = useContext(profileContext)
   return (
     <>
-      {state.user.login !== "" ?
+      {state.user&&state.user.login !== "" ?
           (<div class="md:w-5/6 bg-blue-300 mx-8 md:mx-auto my-2 p-4 rounded
                         flex flex-col md:flex-row justify-center items-center bg-opacity-20 backdrop-blur">
             <img class="basis-full mb-4 md:mb-0 md:basis-1/6 w-1/2 md:w-1/6 rounded bg-transparent" src={state.user.avatar_url} alt={`${state.user.name}'s github image`} />
