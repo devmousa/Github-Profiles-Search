@@ -16,12 +16,16 @@ export default component$(() => {
   useOnWindow(
     'scroll', 
     $(async () => {
-      console.log(window.scrollY, window.innerHeight, document.body.offsetHeight)
-      if(state.user){
+      const scrollY = window.scrollY
+      const innerHeight = window.innerHeight
+      const offsetHeight = document.body.offsetHeight
+
+      if(state.user && (scrollY + innerHeight >= offsetHeight)){
         state.page = state.page + 1
         const repos = await infiniteScrollToGetRepos(state.user.login, state.page)
-        repos ? state.repos = [...state.repos, ...repos] : ''
-      }
+        if(repos)
+          state.repos = [...state.repos, ...repos]
+      }        
     })
   )
 

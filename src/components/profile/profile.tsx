@@ -40,21 +40,19 @@ export const getRepos = async (username: string, page: number = 1) => {
   const repo_url = api_url + username + `/repos?sort=updated&page=${page}`
   const response = await fetch(repo_url)
   const result: Repo[] = await handleResponse(response)
-  const repos: Repo[] = result?.filter((repo: Repo) => repo.fork === false)
+  const repos: Repo[] = result.filter((repo: Repo) => repo.fork === false)
 
   return repos
 }
 
 export const infiniteScrollToGetRepos = async (username: string, page: number) => {
-  const scrollY = window.scrollY
-  const innerHeight = window.innerHeight
-  const offsetHeight = document.body.offsetHeight
-
-  if (scrollY + innerHeight > offsetHeight - 100) {
-    const repos: Repo[] = await getRepos(username, page)
-    return repos
-  }
+  console.log(1)
+  const repos: Repo[] = await getRepos(username, page)
+  console.log(page)
+  console.log(repos)
+  return repos
 }
+
 
 export const getUserData = async (username: string): Promise<{
   repos: Repo[], user: User
@@ -90,7 +88,7 @@ export const ProfileComponent = component$(() => {
           ''
       }
       <div class="flex flex-wrap flex-row justify-around box-border">
-      {state.repos?.map(
+      {state.repos.map(
         ( repo: Repo,
           index: number ) => {
         return <a href={repo.html_url} 
