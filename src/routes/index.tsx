@@ -22,8 +22,8 @@ export default component$(() => {
 
       if(state.user && (scrollY + innerHeight >= offsetHeight)){
         const repos = await infiniteScrollToGetRepos(state.user.login, state.page)
-        state.page = state.page + 1
         if(repos)
+          state.page = state.page + 1
           state.repos = [...state.repos, ...repos]
       }        
     })
