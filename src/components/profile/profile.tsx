@@ -47,7 +47,7 @@ export const getRepos = async (username: string, page: number = 1) => {
 
 export const infiniteScrollToGetRepos = async (username: string, page: number) => {
   console.log(1)
-  const repos: Repo[] = await getRepos(username, page)
+  const repos: Repo[] = await getRepos(username, page + 1)
   console.log(page)
   console.log(repos)
   return repos
